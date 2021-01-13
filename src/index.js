@@ -1,8 +1,9 @@
 import { ApolloServer } from 'apollo-server'
+import { v4 as uuid } from 'uuid'
+
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -22,7 +23,7 @@ const resolvers = {
   Mutation: {
     post: (_, args) => {
       const link = {
-        id: `link-${links.length}`,
+        id: `link-${uuid()}`,
         description: args.description,
         url: args.url
       }
