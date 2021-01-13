@@ -1,21 +1,11 @@
 import { ApolloServer } from 'apollo-server'
+import fs from 'fs'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-const typeDefs = `
-  type Query {
-    info: String!
-    feed: [Link!]!
-  }
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-  type Mutation {
-    post(url: String!, description: String!): Link!
-  }
-
-  type Link {
-    id: ID!
-    description: String!
-    url: String!
-  }
-`
 const links = [{
   id: 'link-0',
   url: 'www.howtographql.com',
@@ -30,7 +20,10 @@ const resolvers = {
 }
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: fs.readFileSync(
+    path.join(__dirname, 'schema.graphql'),
+    'utf8'
+  ),
   resolvers
 })
 
