@@ -15,10 +15,11 @@ const links = [{
 const resolvers = {
   Query: {
     info: () => 'This is the API of a Hackernews Clone',
-    feed: () => links
+    feed: () => links,
+    link: (_, args) => links.find(link => link.id === args.id)
   },
   Mutation: {
-    post: (parent, args) => {
+    post: (_, args) => {
       const link = {
         id: `link-${links.length}`,
         description: args.description,
