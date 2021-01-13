@@ -12,11 +12,12 @@ const links = [{
   description: 'Fullstack tutorial for GraphQL'
 }]
 
+const findLinkByID = id => links.find(link => link.id === id)
 const resolvers = {
   Query: {
     info: () => 'This is the API of a Hackernews Clone',
     feed: () => links,
-    link: (_, args) => links.find(link => link.id === args.id)
+    link: (_, args) => findLinkByID(args.id)
   },
   Mutation: {
     post: (_, args) => {
@@ -26,6 +27,12 @@ const resolvers = {
         url: args.url
       }
       links.push(link)
+      return link
+    },
+    updateLink: (_, args) => {
+      const link = findLinkByID(args.id)
+      if (args.url) link.url = args.url
+      if (args.description) link.description = args.description
       return link
     }
   }
