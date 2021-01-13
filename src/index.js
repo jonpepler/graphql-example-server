@@ -35,6 +35,12 @@ const resolvers = {
       if (args.url) link.url = args.url
       if (args.description) link.description = args.description
       return link
+    },
+    deleteLink: (_, args) => {
+      const link = findLinkByID(args.id)
+      const linkIndex = links.findIndex(link => link.id === args.id)
+      links.splice(linkIndex, 1)
+      return link
     }
   }
 }
