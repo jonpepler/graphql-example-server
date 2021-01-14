@@ -1,16 +1,11 @@
 import { ApolloServer, PubSub } from 'apollo-server'
 import pkg from '@prisma/client'
 
-import { Query, Mutation, Subscription, Link, Vote } from './resolvers/index.js'
-
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-const { PrismaClient } = pkg
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
+import { Query, Mutation, Subscription, Link, Vote } from './resolvers/index.js'
 const resolvers = {
   Query,
   Mutation,
@@ -18,6 +13,10 @@ const resolvers = {
   Link,
   Vote
 }
+
+const { PrismaClient } = pkg
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const server = new ApolloServer({
   typeDefs: fs.readFileSync(
