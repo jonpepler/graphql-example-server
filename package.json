@@ -6,13 +6,16 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon -e js,graphql src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "./dev.sh",
+    "dev:node-only": "nodemon -e js,graphql src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "prisma migrate deploy --preview-feature"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@prisma/cli": "^2.14.0",
     "eslint": "^7.17.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
@@ -21,6 +24,7 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "@prisma/client": "^2.14.0",
     "apollo-server": "^2.19.1",
     "uuid": "^8.3.2"
   }

@@ -4,44 +4,37 @@ import { v4 as uuid } from 'uuid'
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+
+import pkg from '@prisma/client'
+const { PrismaClient } = pkg
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const links = [{
-  id: 'link-0',
-  url: 'www.howtographql.com',
-  description: 'Fullstack tutorial for GraphQL'
-}]
-
-const findLinkByID = id => links.find(link => link.id === id)
+const findLinkByID = async (id, prisma) => prisma.link.findUnique({ where: { id: parseInt(id) } })
 const resolvers = {
   Query: {
     info: () => 'This is the API of a Hackernews Clone',
-    feed: () => links,
-    link: (_, args) => findLinkByID(args.id)
+    feed: async (parent, args, { prisma }) => prisma.link.findMany(),
+    link: (_, args, { prisma }) => findLinkByID(args.id, prisma)
   },
   Mutation: {
-    post: (_, args) => {
-      const link = {
-        id: `link-${uuid()}`,
-        description: args.description,
-        url: args.url
+    post: async (parent, args, { prisma }, info) => {
+      const newLink = await prisma.link.create({
+        data: {
+          url: args.url,
+          description: args.description
+        }
+      })
+      return newLink
+    },
+    updateLink: async (_, { id, url, description }, { prisma }) => prisma.link.update({
+      where: { id: parseInt(id) },
+      data: {
+        url,
+        description
       }
-      links.push(link)
-      return link
-    },
-    updateLink: (_, args) => {
-      const link = findLinkByID(args.id)
-      if (args.url) link.url = args.url
-      if (args.description) link.description = args.description
-      return link
-    },
-    deleteLink: (_, args) => {
-      const link = findLinkByID(args.id)
-      const linkIndex = links.findIndex(link => link.id === args.id)
-      links.splice(linkIndex, 1)
-      return link
-    }
+    }),
+    deleteLink: async (_, { id }, { prisma }) => prisma.link.delete({ where: { id: parseInt(id) } })
   }
 }
 
@@ -50,7 +43,10 @@ const server = new ApolloServer({
     path.join(__dirname, 'schema.graphql'),
     'utf8'
   ),
-  resolvers
+  resolvers,
+  context: {
+    prisma: new PrismaClient()
+  }
 })
 
 server

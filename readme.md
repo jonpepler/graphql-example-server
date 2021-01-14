@@ -5,6 +5,14 @@ Designed to work with the example client ([repo](https://github.com/jonpepler/gr
 
 Hosted on [Heroku](https://graphql-example-server.herokuapp.com/).
 
+# setup
+Ensure that you have Docker installed for running the database.
+
+Add to your local .env file:
+```
+DATABASE_URL="postgresql://postgres:dev@localhost:5432/postgres"
+```
+
 # run
 ```npm run start```
 
