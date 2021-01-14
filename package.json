@@ -8,8 +8,10 @@
     "start": "node src/index.js",
     "dev": "./dev.sh",
     "dev:node-only": "nodemon -e js,graphql src/index.js",
+    "migrate:dev": "prisma migrate dev --preview-feature",
+    "migrate:deploy": "prisma migrate deploy --preview-feature",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "prisma migrate deploy --preview-feature"
+    "heroku-postbuild": "npm run migrate:deploy"
   },
   "keywords": [],
   "author": "",
